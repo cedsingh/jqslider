@@ -7,15 +7,16 @@ $(function () {
 	slider.css({
 		'width': totalWidth,
 	});
+	$(slider).prepend($('.slide').last().remove());
+	slider.css('left', -slide.outerWidth());
 	$('.arrow-left').click(function(){
 		if(timer) {
 			clearInterval(timer);
 			timer = null;
 		}
 		if(!isClicked) {
-			console.log(isClicked);
 			isClicked = true;
-			toLeft();
+			toLeft(activeIndex);
 		}
 	});
 	$('.arrow-right').click(function() {
@@ -25,35 +26,43 @@ $(function () {
 		}
 		if(!isClicked) {
 			isClicked = true;
-			toRight();
+			toRight(activeIndex);
 		}
 	});
 	$('.bullet a').click(function() {
+		if(timer) {
+			clearInterval(timer);
+			timer = null;
+		}
 		let index = $(this).index('.bullet a');
-		if($(this).index() < activeIndex) {
-			toLeft(index);
+		if(index < activeIndex) {
+			if(!isClicked){
+				isClicked = true;
+				toLeft(index);
+			}
 		}
 		else {
-			toRight(index);
+			if(!isClicked){
+				isClicked = true;
+				toRight(index);
+			}
 		}
 	});
 	$('.bullet').eq(activeIndex).addClass('active');
 	timer = setInterval(()=>{
-		toRight();
+		toRight(activeIndex);
 	}, 3000);
 });
 
-function toRight(index = -1) {
+function toRight(index) {
+	activeIndex = index;
 	activeIndex++;
-	if(index != -1) {
-		activeIndex = index;
-	}
 	if(activeIndex > totalSlides - 1)
 		activeIndex = 0;
 	$('.bullet').removeClass('active');
 	$('.bullet').eq(activeIndex).addClass('active');
 	slider.animate({
-		left: -slide.outerWidth()*activeIndex
+		left: '0'
 	}, 1000, function() {
 		if(!timer) {
 			timer = setInterval(()=>{
@@ -61,26 +70,34 @@ function toRight(index = -1) {
 			}, 3000);
 		}
 		isClicked = false;
+		$(slider).prepend($('.slide').last().remove());
+		slider.css('left', -slide.outerWidth());
 	});
 }
 
-function toLeft(index = -2) {
+function toLeft(index) {
+	activeIndex = index;
 	activeIndex--;
-	if(index != -2) {
-		activeIndex = index;
-	}
 	if(activeIndex < 0)
 		activeIndex = totalSlides - 1;
 	$('.bullet').removeClass('active');
 	$('.bullet').eq(activeIndex).addClass('active');
 	slider.animate({
-		left: -slide.outerWidth()*activeIndex
+		left: -slide.outerWidth()
 	}, 1000, function() {
 		if(!timer) {
 			timer = setInterval(()=>{
-				toRight();
+				toRight(activeIndex);
 			}, 3000);
 		}
 		isClicked = false;
+		$(slider).append($('.slide').first().remove());
+		slider.css('left', 0);
 	});
+}
+
+function slideTo(index) {
+	if(index == 0) {
+
+	}
 }
