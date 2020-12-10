@@ -60,7 +60,7 @@ function toRight(index = -1) {
 				toRight();
 			}, 3000);
 		}
-		isClicked = true;
+		isClicked = false;
 	});
 }
 
