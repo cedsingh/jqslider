@@ -339,13 +339,20 @@ p, h4 {
 
 @media screen and (max-width: 767px) {
 	.site-header {
-		flex-direction: column;
+		display: block;
+		margin: 0;
 	}
-	.heading {
+	.site-logo {
 		text-align: center;
 	}
+	nav li {
+		display: block;
+	}
+	.header-right .button {
+		padding: 5px;
+	}
 	.header-right {
-		justify-content: center;
+		display: inline-block;
 	}
 	.about {
 		flex-direction: column;

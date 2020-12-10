@@ -13,6 +13,7 @@ $(function () {
 			timer = null;
 		}
 		if(!isClicked) {
+			console.log(isClicked);
 			isClicked = true;
 			toLeft();
 		}
