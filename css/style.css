@@ -249,9 +249,10 @@ p, h4 {
 .slide-show {
 	position: relative;
 	height: 500px;
+	overflow: hidden;
 }
 .slide-wrap {
-	
+	position: absolute;
 }
 .slide {
 	position: relative;
@@ -302,8 +303,8 @@ p, h4 {
 	left: 50%;
 	transform: translateX(-50%);
 }
-.active.bullet {
-	color: #eee;
+.active a{
+	color: #222 !important;
 } 
 .bullet {
 	font-size: 40px;
@@ -336,7 +337,7 @@ p, h4 {
 
 /* Responsiveness */
 
-@media screen and (max-width: 750px) {
+@media screen and (max-width: 767px) {
 	.site-header {
 		flex-direction: column;
 	}

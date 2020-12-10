@@ -1,38 +1,85 @@
-var activeIndex = 0, totalSlides, totalWidth, activeIndex = 0;
+var activeIndex = 0, totalSlides, totalWidth, activeIndex = 0, timer, isClicked = false;
 var slider = $('.slide-wrap');
 var slide = $('.slide');
 $(function () {
 	totalSlides = slide.length;
-	totalWidth = slide.length*slide.outerWidth();
-	slider.css('width', totalWidth);
+	totalWidth = (slide.length)*slide.outerWidth();
+	slider.css({
+		'width': totalWidth,
+	});
 	$('.arrow-left').click(function(){
-		toLeft();
+		if(timer) {
+			clearInterval(timer);
+			timer = null;
+		}
+		if(!isClicked) {
+			isClicked = true;
+			toLeft();
+		}
 	});
 	$('.arrow-right').click(function() {
-		toRight();
+		if(timer) {
+			clearInterval(timer);
+			timer = null;
+		}
+		if(!isClicked) {
+			isClicked = true;
+			toRight();
+		}
 	});
+	$('.bullet a').click(function() {
+		let index = $(this).index('.bullet a');
+		if($(this).index() < activeIndex) {
+			toLeft(index);
+		}
+		else {
+			toRight(index);
+		}
+	});
+	$('.bullet').eq(activeIndex).addClass('active');
+	timer = setInterval(()=>{
+		toRight();
+	}, 3000);
 });
 
-function toRight() {
-	$('.slide').first().before($('.slide').last().css('margin-left', -slide.outerWidth()));
+function toRight(index = -1) {
+	activeIndex++;
+	if(index != -1) {
+		activeIndex = index;
+	}
+	if(activeIndex > totalSlides - 1)
+		activeIndex = 0;
+	$('.bullet').removeClass('active');
+	$('.bullet').eq(activeIndex).addClass('active');
 	slider.animate({
-		marginLeft: slide.outerWidth()
+		left: -slide.outerWidth()*activeIndex
 	}, 1000, function() {
-		$('.slide').last().remove();
+		if(!timer) {
+			timer = setInterval(()=>{
+				toRight();
+			}, 3000);
+		}
+		isClicked = true;
 	});
 }
 
-function toLeft() {
-	slide.animate({
-		marginRight: slide.outerWidth()
+function toLeft(index = -2) {
+	activeIndex--;
+	if(index != -2) {
+		activeIndex = index;
+	}
+	if(activeIndex < 0)
+		activeIndex = totalSlides - 1;
+	$('.bullet').removeClass('active');
+	$('.bullet').eq(activeIndex).addClass('active');
+	slider.animate({
+		left: -slide.outerWidth()*activeIndex
 	}, 1000, function() {
-		if(activeIndex < 0) {
-			slider.append(slide.eq(totalSlides-1));
-			activeIndex = totalSlides;
+		if(!timer) {
+			timer = setInterval(()=>{
+				toRight();
+			}, 3000);
 		}
-		else {
-			slider.append(slide.eq(activeIndex));
-		}
-		activeIndex--;
+		isClicked = false;
 	});
 }
