@@ -4,11 +4,11 @@ var slide = $('.slide');
 $(function () {
 	totalSlides = slide.length;
 	totalWidth = (slide.length)*slide.outerWidth();
+	$(slider).prepend($('.slide').last().remove());
 	slider.css({
 		'width': totalWidth,
+		'left': -slide.outerWidth()
 	});
-	$(slider).prepend($('.slide').last().remove());
-	slider.css('left', -slide.outerWidth());
 	$('.arrow-left').click(function(){
 		if(timer) {
 			clearInterval(timer);
@@ -38,13 +38,13 @@ $(function () {
 		if(index < activeIndex) {
 			if(!isClicked){
 				isClicked = true;
-				toLeft(index);
+				slideTo(index);
 			}
 		}
 		else {
 			if(!isClicked){
 				isClicked = true;
-				toRight(index);
+				slideTo(index);
 			}
 		}
 	});
@@ -56,13 +56,12 @@ $(function () {
 
 function toRight(index) {
 	activeIndex = index;
-	activeIndex++;
 	if(activeIndex > totalSlides - 1)
 		activeIndex = 0;
 	$('.bullet').removeClass('active');
 	$('.bullet').eq(activeIndex).addClass('active');
 	slider.animate({
-		left: '0'
+		left: 0
 	}, 1000, function() {
 		if(!timer) {
 			timer = setInterval(()=>{
@@ -72,18 +71,18 @@ function toRight(index) {
 		isClicked = false;
 		$(slider).prepend($('.slide').last().remove());
 		slider.css('left', -slide.outerWidth());
+		activeIndex++;
 	});
 }
 
 function toLeft(index) {
 	activeIndex = index;
-	activeIndex--;
 	if(activeIndex < 0)
 		activeIndex = totalSlides - 1;
 	$('.bullet').removeClass('active');
 	$('.bullet').eq(activeIndex).addClass('active');
 	slider.animate({
-		left: -slide.outerWidth()
+		left: -slide.outerWidth()*2
 	}, 1000, function() {
 		if(!timer) {
 			timer = setInterval(()=>{
@@ -91,13 +90,19 @@ function toLeft(index) {
 			}, 3000);
 		}
 		isClicked = false;
-		$(slider).append($('.slide').first().remove());
-		slider.css('left', 0);
+		slider.append($('.slide').first().remove());
+		slider.css('left', -slide.outerWidth());
+		activeIndex--;
 	});
 }
 
 function slideTo(index) {
-	if(index == 0) {
-
+	if(activeIndex > index) {
+		toRight(index);
+		activeIndex = index;
+	}
+	else {
+		toLeft(index);
+		activeIndex = index;
 	}
 }
